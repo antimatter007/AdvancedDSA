@@ -1,0 +1,170 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MEM(a, b) memset(a, (b), sizeof(a))
+#define FOR(i, j, k, in) for (int i=j ; i<k ; i+=in)
+#define RFOR(i, j, k, in) for (int i=j ; i>=k ; i-=in)
+#define REP(i, j) FOR(i, 0, j, 1)
+#define RREP(i, j) RFOR(i, j, 0, 1)
+#define rall(cont) cont.end(), cont.begin()
+#define FOREACH(it, l) for (auto it = l.begin(); it != l.end(); it++)
+#define IN(A, B, C) assert( B <= A && A <= C)
+#define MP make_pair
+
+#define F               first
+#define S               second
+#define IN_REP          int tt; cin >> tt; while(tt--)
+
+const double pi=acos(-1.0);
+using ll = long long;
+using ull = unsigned long long;
+using ld = long double;
+using vi = vector<int>;
+using vb = vector<bool>;
+using vvi = vector<vi>;
+using vll = vector<ll>;
+using vvll = vector<vll>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
+
+
+#define pb push_back
+#define fr(a,b) for(int i = a; i < b; i++)
+#define rep(i,a,b) for(int i = a; i < b; i++)
+#define mod 1000000007
+#define inf (1LL<<60)
+#define all(x) (x).begin(), (x).end()
+#define prDouble(x) cout << fixed << setprecision(10) << x
+#define triplet pair<ll,pair<ll,ll>>
+#define goog(tno) cout << "Case #" << tno <<": "
+#define fast_io ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define read(x) int x; cin >> x
+
+#define um unoredered_map<int, int> 
+#define pqmax priority_queue<int> 
+#define pqmin priority_queue<int , vi, greater<int>>
+ 
+void init_code(){
+    fast_io;
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif 
+}
+
+
+
+
+
+//------------------------------------------------------------------------
+
+
+
+
+
+
+class Graph{
+	int V;
+	list<pair<int,int>> l;
+
+public:
+	Graph(int V){
+		this->V = V;
+	}
+	
+	int addEdge(int u,int v){
+		l.push_back(make_pair(u,v));
+	}
+	//Find
+	int findSet(int i, int parent[]){
+		if(parent[i]==-1)
+			return i;
+
+		return findSet(parent[i], parent);
+	}
+
+	//Union
+	void union_set(int x, int y, int parent[]){
+		int s1= findSet(x, parent);
+		int s2= findSet(y, parent);
+
+		if(s1!= s2){
+			parent[s1]=s2;
+		}
+	}
+
+	bool contains_cycle(){
+		//DSU logic to check if there exists a cycle in the graph
+
+		int *parent = new int[V];
+		rep(i, 0, V){
+			parent[i]=-1;
+		}
+
+		//iterate over all the edges
+		for(auto edge: l){
+			int i=edge.first;
+			int j=edge.second;
+
+			int s1= findSet(i, parent);
+			int s2= findSet(j, parent);
+
+			if(s1!=s2){
+				union_set(s1,s2,parent);
+			}
+			else{
+				cout<<"same parents "<<s1<<" and "<<s2<<endl;
+				return true;
+			}
+		}
+		delete [] parent;
+		return false;
+	}
+
+
+
+//-----------------------------------------------------------------------------
+
+// void union_set(int v, int u, int parent[]){
+// 	if(parent[u]==parent[v])
+// 		return;
+// 	else
+// 		parent[u]=v;
+// }
+
+
+// vector<bool> DSU(vector<vector<int>>query)
+// {
+// 	int parent[100000]={-1};
+//  for(int i=0;i<query.size();i++){
+//  	if(query[i][0]==1){
+//  		//union of query[i][1] and query[i][1]
+
+//  		union_set(query[i][1], query[i][2], parent);
+//  	}
+//  	else
+//  	{
+//  		//check the parents of both query[i][1] and query[i][2] and push into ans
+
+
+//  	}
+//  }   
+    
+    
+// }
+
+};
+
+int main(){
+	init_code();
+	Graph g(4);
+	g.addEdge(0,1);
+	g.addEdge(1,2);
+	g.addEdge(2,3);
+	g.addEdge(3,0);
+	g.addEdge(3,4);
+	cout<<g.contains_cycle()<<endl;
+    return 0;
+}
