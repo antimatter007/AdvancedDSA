@@ -1,0 +1,168 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MEM(a, b) memset(a, (b), sizeof(a))
+#define FOR(i, j, k, in) for (int i=j ; i<k ; i+=in)
+#define RFOR(i, j, k, in) for (int i=j ; i>=k ; i-=in)
+#define REP(i, j) FOR(i, 0, j, 1)
+#define RREP(i, j) RFOR(i, j, 0, 1)
+#define rall(cont) cont.end(), cont.begin()
+#define FOREACH(it, l) for (auto it = l.begin(); it != l.end(); it++)
+#define IN(A, B, C) assert( B <= A && A <= C)
+#define MP make_pair
+
+#define F               first
+#define S               second
+#define IN_REP          int tt; cin >> tt; while(tt--)
+
+const double pi=acos(-1.0);
+using ll = long long;
+using ull = unsigned long long;
+using ld = long double;
+using vi = vector<int>;
+using vb = vector<bool>;
+using vvi = vector<vi>;
+using vll = vector<ll>;
+using vvll = vector<vll>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
+
+
+#define pb push_back
+#define fr(a,b) for(int i = a; i < b; i++)
+#define rep(i,a,b) for(int i = a; i < b; i++)
+#define mod 1000000007
+#define inf (1LL<<60)
+#define all(x) (x).begin(), (x).end()
+#define prDouble(x) cout << fixed << setprecision(10) << x
+#define triplet pair<ll,pair<ll,ll>>
+#define goog(tno) cout << "Case #" << tno <<": "
+#define fast_io ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define read(x) int x; cin >> x
+
+#define um unoredered_map<int, int> 
+#define pqmax priority_queue<int> 
+#define pqmin priority_queue<int , vi, greater<int>>
+ 
+void init_code(){
+    fast_io;
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif 
+}
+
+
+//-------------------------------------------------------------------
+
+
+//SegmentTree Implementation
+
+struct segmenttree{
+	int n;
+	vector<int> st;
+
+	void init(int _n){
+		this->n =_n;
+		st.resize(4*n, 0);
+	}
+
+	void build(int start, int end, int node, vector<int> &v){
+		//Base Case
+		if(start==end)
+		{
+			st[node]=v[start];
+			return ;
+		}
+
+		int mid= (start+end)/2;
+
+		//Build the left subtree (start-> mid)
+		build(start, mid, 2*node+1, v);
+
+		//Build the left subtree (mid+1-> end)
+		build(mid+1,end, 2*node+2, v);
+
+		st[node]= st[node*2+1] + st[node*2+2];
+	}
+
+	int query(int s, int e, int l, int r, int node){
+		if(s>r || e<l){
+			return 0;
+		}
+
+		//Complete overlap
+		if(s>= l && e<=r){
+			return st[node];
+		}
+
+		//partial overlap
+		int mid= (s+e)/2;
+
+		int q1 = query(s, mid, l ,r, 2*node+1);
+		int q2 = query(mid+1, e, l ,r, 2*node+2);
+			
+			return q1+q2;
+			}
+
+	void update(int s, int e, int node, int index, int val){
+		if(s==e){
+			st[node]=val;
+			return ;
+		}
+
+		int mid = (s+e)/2;
+		if(index <= mid){
+			update(s, mid, 2*node+1, index, val);
+		}
+
+		else{
+			update(mid+1, e, 2*node+2, index, val);
+		}
+
+		st[node]= st[node*2+1] + st[2*node+2];
+		return ;
+
+
+	}
+
+	void build(vector<int> &v){
+		build(0, v.size()-1, 0, v);
+	}
+
+	int query(int l, int r){
+		return query(0, n-1, l ,r, 0);
+	}
+
+	void update(int x, int y){
+		update(0, n-1, 0, x,y);
+	}
+
+};
+
+
+
+
+
+
+int main(){
+	init_code();
+	
+	vector<int> v={1,2,3,4,5,6,7,8};
+	
+	segmenttree tree;
+	tree.init(v.size());
+	tree.build(v);
+	tree.update(4,10);
+	cout<<tree.st[0]<<endl;
+	cout<<tree.query(2,6)<<endl;
+	tree.update(5,13);
+	cout<<tree.query(1,6)<<endl;
+	tree.update(1,23);
+	cout<<tree.query(1,6)<<endl;
+
+
+    return 0;
+};
