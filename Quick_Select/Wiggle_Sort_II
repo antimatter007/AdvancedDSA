@@ -1,0 +1,59 @@
+class Solution {
+public:
+    void wiggleSort(vector<int>& nums) {
+        int size = nums.size();
+        if (size < 2) {
+            return;
+        }
+        //Store the mid element in variable mid
+        int mid = (size % 2 == 1) ? size / 2 : size / 2 - 1;
+        
+        //Calling the findMid functon
+        findMid(nums, 0, size - 1, mid);
+        int smaller = mid;
+        int larger = size - 1;
+        vector<int> result(size, 0);
+        for (int i = 0; i < size; i += 2) {
+            result[i] = nums[smaller];
+            smaller--;
+            if (i + 1 < size) {
+                result[i + 1] = nums[larger];
+                larger--;
+            }
+        }
+        nums = result;
+        return;
+    }
+    
+    void findMid(vector<int>& nums, int start, int end, int k) {
+        if (start == end) {
+            return;
+        }
+        int left = start;
+        int right = end;
+        int mid = left + (right - left) / 2;
+       
+        int pivot = nums[mid];
+        mid = start;
+        while (mid <= right) {
+            if (nums[mid] < pivot) {
+                swap(nums, left, mid);
+                left++;
+                mid++;
+            } else if (nums[mid] > pivot) {
+                swap(nums, mid, right);
+                right--;
+            } else {
+                mid++;
+            }
+        }
+        if (k <= left) {
+            findMid(nums, start, left, k);
+        }
+        if (k >= mid) {
+            findMid(nums, mid, end, k);
+        }
+        return;
+    }
+   
+};
